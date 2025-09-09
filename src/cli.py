@@ -27,45 +27,49 @@ def read_inputs_csv(path: str) -> List[CompoundInput]:
 
 
 def prompt_interactive() -> List[CompoundInput]:
-	print("Enter compounds; blank formula to finish.")
-	items: List[CompoundInput] = []
-	while True:
-		formula = input("Compound formula (e.g., Bi2O3) › ").strip()
-		if not formula:
-			break
-		coef = float(input("Coefficient (mole units) › ").strip())
-		density = float(input("Density (g/cm^3) › ").strip())
-		Ui_value = float(input("Bond dissociation energy value › ").strip())
-		Ui_units = input("Units (kjmol/ev) › ").strip().lower()
-		items.append(CompoundInput(formula, coef, density, Ui_value, Ui_units))
-	return items
+    print("Enter the number of compounds you want to add:")
+    try:
+        num = int(input("Number of compounds › ").strip())
+    except ValueError:
+        print("Invalid number.")
+        return []
+    items: List[CompoundInput] = []
+    for i in range(num):
+        print(f"\nEnter details for compound #{i+1}:")
+        formula = input("  Compound formula (e.g., Bi2O3) › ").strip()
+        coef = float(input("  Coefficient (mole units) › ").strip())
+        density = float(input("  Density (g/cm^3) › ").strip())
+        Ui_value = float(input("  Bond dissociation energy value (kJ/mol) › ").strip())
+        # Units are not needed, so we set Ui_units to "kjmol"
+        items.append(CompoundInput(formula, coef, density, Ui_value, "kjmol"))
+    return items
 
 
 def format_results(props, M, rho_mix, Vt, Gt, E, K, S, L, mu):
-	print("\n=== Results ===")
-	print(f"Molecular weight of total composition (M): {M:.6f} g/mol (mole-sum weighted)")
-	print(f"Total density of mixture: {rho_mix:.6f} g/cm^3")
-	print("")
-	for p in props:
-		print(f"Compound: {p.formula}")
-		print(f"  MW: {p.MW:.6f} g/mol")
-		print(f"  Coefficient mole fraction (Xi): {p.mole_fraction:.6f}")
-		print(f"  Mass: {p.mass:.6f} g")
-		print(f"  Volume: {p.volume:.6f} cm^3")
-		print(f"  Density: {p.density:.6f} g/cm^3")
-		print(f"  Oxidation (cation): +{p.oxidation_cation}")
-		print(f"  Ionic radii: RA={p.RA_pm:.2f} pm, RO={p.RO_pm:.2f} pm")
-		print(f"  V_i: {p.Vi:.6e} cm^3/mol")
-		print(f"  G_i: {p.Gi:.6f} kJ·cm^-3·mol^-1·g? (per spec)")
-		print("")
-	print(f"V_t (total packing density): {Vt:.6e}")
-	print(f"G_t (total dissociation energy/volume): {Gt:.6f}")
-	print("")
-	print(f"E*: {E:.6f}")
-	print(f"K*: {K:.6f}")
-	print(f"S*: {S:.6f}")
-	print(f"L*: {L:.6f}")
-	print(f"μ*: {mu:.6f}")
+    print("\n=== Results ===")
+    print(f"Molecular weight of total composition (M): {M:.3f} g/mol")
+    print(f"Total density of mixture: {rho_mix:.6f} g/cm^3")
+    print("")
+    for p in props:
+        print(f"Compound: {p.formula}")
+        print(f"  MW: {p.MW:.3f} g/mol")
+        print(f"  Coefficient mole fraction (Xi): {p.mole_fraction:.6f}")
+        print(f"  Mass: {p.mass:.3f} g")
+        print(f"  Volume: {p.volume:.3f} cm^3")
+        print(f"  Density: {p.density:.6f} g/cm^3")
+        print(f"  Oxidation (cation): +{p.oxidation_cation}")
+        print(f"  Ionic radii: RA={p.RA_pm:.2f} pm, RO={p.RO_pm:.2f} pm")
+        print(f"  V_i: {p.Vi:.2f} cm^3/mol")  # <-- changed to 2 decimals
+        print(f"  G_i: {p.Gi:.3f} kJ/cm^3")   # <-- changed to 3 decimals
+        print("")
+    print(f"V_t (total packing density): {Vt:.6f}")
+    print(f"G_t (total dissociation energy/volume): {Gt:.6f}")
+    print("")
+    print(f"E*: {E:.6f}")
+    print(f"K*: {K:.6f}")
+    print(f"S*: {S:.6f}")
+    print(f"L*: {L:.6f}")
+    print(f"μ*: {mu:.6f}")
 
 
 def main(argv: List[str] | None = None) -> int:

@@ -4,30 +4,28 @@ import re
 from typing import Dict
 
 
+ELEMENT_RE = re.compile(r'([A-Z][a-z]?)(\d*)')
 SUBSCRIPT_MAP = str.maketrans({
-	"₀": "0",
-	"₁": "1",
-	"₂": "2",
-	"₃": "3",
-	"₄": "4",
-	"₅": "5",
-	"₆": "6",
-	"₇": "7",
-	"₈": "8",
-	"₉": "9",
+    "₀": "0",
+    "₁": "1",
+    "₂": "2",
+    "₃": "3",
+    "₄": "4",
+    "₅": "5",
+    "₆": "6",
+    "₇": "7",
+    "₈": "8",
+    "₉": "9",
 })
 
-
-ELEMENT_RE = re.compile(r"([A-Z][a-z]?)([0-9]*)")
-
-
 def normalize_formula(formula: str) -> str:
-	"""Convert Unicode subscripts to ASCII digits and remove whitespace.
-
-	Examples: "B₂O₃" -> "B2O3"
-	"""
-	return formula.translate(SUBSCRIPT_MAP).replace(" ", "")
-
+    """Convert Unicode subscripts to ASCII digits, remove whitespace, and capitalize elements."""
+    formula = formula.strip().replace(" ", "")
+    formula = formula.translate(SUBSCRIPT_MAP)
+    # Capitalize element symbols (handles 'sro', 'b2o3', etc.)
+    def repl(match):
+        return match.group(1).capitalize() + match.group(2)
+    return re.sub(r'([A-Za-z]{1,2})(\d*)', repl, formula)
 
 def parse_formula(formula: str) -> Dict[str, int]:
 	"""Parse a simple inorganic formula without parenthesis, e.g., Bi2O3, SrO, Li2O.
