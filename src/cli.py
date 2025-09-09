@@ -59,8 +59,8 @@ def format_results(props, M, rho_mix, Vt, Gt, E, K, S, L, mu):
         print(f"  Density: {p.density:.6f} g/cm^3")
         print(f"  Oxidation (cation): +{p.oxidation_cation}")
         print(f"  Ionic radii: RA={p.RA_pm:.2f} pm, RO={p.RO_pm:.2f} pm")
-        print(f"  V_i: {p.Vi:.2f} cm^3/mol")  # <-- changed to 2 decimals
-        print(f"  G_i: {p.Gi:.3f} kJ/cm^3")   # <-- changed to 3 decimals
+        print(f"  V_i: {p.Vi:.2f} cm^3/mol")
+        print(f"  G_i: {p.Gi:.3f} kJ/cm^3")
         print("")
     print(f"V_t (total packing density): {Vt:.6f}")
     print(f"G_t (total dissociation energy/volume): {Gt:.6f}")
@@ -70,7 +70,6 @@ def format_results(props, M, rho_mix, Vt, Gt, E, K, S, L, mu):
     print(f"S*: {S:.6f}")
     print(f"L*: {L:.6f}")
     print(f"μ*: {mu:.6f}")
-
 
 def main(argv: List[str] | None = None) -> int:
 	parser = argparse.ArgumentParser(description="Elastic constants of multi-component oxide systems")
